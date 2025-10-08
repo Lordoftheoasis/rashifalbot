@@ -53,7 +53,7 @@ class RashifalBot:
             
             try:
                 me = self.twitter_client.get_me()
-                print(f"✅ Twitter API v2 connected as @{me.data.username}")
+                print(f"dunn Twitter API v2 connected as @{me.data.username}")
                 return
             except:
                 print("⚠️ Twitter API v2 failed, trying v1.1...")
@@ -67,7 +67,7 @@ class RashifalBot:
                 )
                 self.twitter_api_v1 = tweepy.API(auth, wait_on_rate_limit=True)
                 user = self.twitter_api_v1.verify_credentials()
-                print(f"✅ Twitter API v1.1 connected as @{user.screen_name}")
+                print(f"dunn Twitter API v1.1 connected as @{user.screen_name}")
                 self.use_v1_api = True
                 
         except Exception as e:
@@ -120,33 +120,64 @@ class RashifalBot:
         
         return text
     
+    def get_sign_personality(self, sign_english):
+        """Get personality traits for each sign"""
+        personalities = {
+            "Aries": "impulsive, competitive, always rushing, terrible at texting back, starts fights",
+            "Taurus": "stubborn, food-obsessed, never changes their mind, slow to move on, materialistic",
+            "Gemini": "two-faced, can't commit, texts everyone, gossips constantly, contradicts themselves",
+            "Cancer": "clingy, emotional, holds grudges forever, plays victim, manipulates with tears",
+            "Leo": "attention-seeking, dramatic, makes everything about them, needs constant validation",
+            "Virgo": "critical, perfectionist, judges everyone, overthinks everything, passive-aggressive",
+            "Libra": "indecisive, people-pleasing, avoids conflict, serial dater, fake nice",
+            "Scorpio": "possessive, vengeful, stalks exes, intimidating, keeps secrets",
+            "Sagittarius": "commitment-phobic, blunt, ghosting expert, can't sit still, brutal honesty",
+            "Capricorn": "workaholic, emotionally unavailable, status-obsessed, cold, calculating",
+            "Aquarius": "detached, emotionally distant, thinks they're special, rebel without a cause",
+            "Pisces": "delusional, martyr complex, escapes reality, always the victim, overly sensitive"
+        }
+        return personalities.get(sign_english, "")
+    
     def generate_rashifal(self, sign_info):
         """Generate rashifal for a sign"""
         
-        # Simple, example-based prompt
-        prompt = f"""Write one complete horoscope sentence for {sign_info['romanized']}.
+        # Get sign personality traits
+        personality = self.get_sign_personality(sign_info['english'])
+        
+        # Pick random other sign for relational horoscopes
+        other_signs = [s for s in self.zodiac_signs if s['english'] != sign_info['english']]
+        other_sign = random.choice(other_signs)
+        
+        # Enhanced prompt with sign-specific personality and relational elements
+        prompt = f"""Write ONE witty, slightly brutal horoscope for {sign_info['romanized']} ({sign_info['english']}).
 
-Start directly with: {sign_info['romanized']}, [your message here].
+{sign_info['english']} traits: {personality}
 
-Example format: Meṣa, your energy is shifting in beautiful ways.
+Write in one of these styles:
+1. Direct callout: "{sign_info['romanized']}, stop pretending you're over it when you check their story every day."
+2. Relational/comparative: "{sign_info['romanized']}, to {other_sign['romanized']} you are somewhere between a painful reminder and a terrible dream."
+3. Brutally honest observation: "{sign_info['romanized']}, your standards aren't high, you just want someone who doesn't exist."
 
-Now write for {sign_info['romanized']}:"""
+Be witty, sarcastic, brutally honest, and reference their actual zodiac personality traits.
+Start ONLY with: {sign_info['romanized']}, [your witty message].
+
+Write for {sign_info['romanized']}:"""
         
         try:
             completion = self.client.chat.completions.create(
-                model="meta-llama/Llama-3.2-3B-Instruct",  # Free model ho
+                model="meta-llama/Llama-3.2-3B-Instruct",
                 messages=[
                     {
                         "role": "system",
-                        "content": "You write horoscopes, try to stick to the format but feel free to do anything within the format. try not to repeat the names, Write only the horoscope sentence itself. Follow the exact format shown in the example. Do not add any instructions, or meta-commentary."
+                        "content": "You write brutally honest, witty horoscopes that call people out. Be sarcastic and reference actual zodiac stereotypes. Keep it one sentence. No meta-commentary, no instructions, just the horoscope itself."
                     },
                     {
                         "role": "user",
                         "content": prompt
                     }
                 ],
-                max_tokens=50,
-                temperature=0.8
+                max_tokens=100,
+                temperature=0.9
             )
             
             if completion and completion.choices:
@@ -175,24 +206,12 @@ Now write for {sign_info['romanized']}:"""
                     if rashifal_text:
                         return rashifal_text
             
-            # Fallback messages
-            fallbacks = [
-                f"{sign_info['romanized']}, stop overthinking and trust your instincts.",
-                f"{sign_info['romanized']}, someone's been thinking about you more than you know.",
-                f"{sign_info['romanized']}, your energy is magnetic today.",
-                f"{sign_info['romanized']}, that person isn't worth your peace of mind.",
-                f"{sign_info['romanized']}, your intuition has been trying to tell you something.",
-                f"{sign_info['romanized']}, you're not responsible for other people's emotions.",
-                f"{sign_info['romanized']}, trust the process, everything is falling into place.",
-                f"{sign_info['romanized']}, you're stronger than you think.",
-                f"{sign_info['romanized']}, stop apologizing for taking up space.",
-                f"{sign_info['romanized']}, your standards aren't too high."
-            ]
-            return random.choice(fallbacks)
+            # If generation fails completely, raise error instead of using fallback
+            raise Exception("Failed to generate valid horoscope")
             
         except Exception as e:
             print(f"❌ Generation error: {e}")
-            return f"{sign_info['romanized']}, trust your instincts today."
+            raise
     
     def post_tweet(self, rashifal, sign_info):
         """Post rashifal to Twitter"""
@@ -232,8 +251,8 @@ Now write for {sign_info['romanized']}:"""
 
 def main():
     """Main function to run the bot"""
-    print("🌟 Starting Rashifal Twitter Bot")
-    print(f"📅 {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(" Starting Rashifal Twitter Bot")
+    print(f" {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 50)
     
     # Check environment variables
@@ -256,7 +275,7 @@ def main():
         else:
             # Show first/last 4 chars for verification
             masked = f"{value[:4]}...{value[-4:]}" if len(value) > 8 else "***"
-            print(f"✅ {var}: {masked}")
+            print(f"bhayo {var}: {masked}")
     
     if missing_vars:
         print(f"\n❌ Missing secrets: {', '.join(missing_vars)}")
@@ -283,7 +302,6 @@ def main():
         
         if success:
             print("bhayo man!")
-
             return 0
         else:
             print("\n⚠️ check gara ta")
