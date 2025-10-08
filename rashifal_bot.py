@@ -134,11 +134,11 @@ Now write for {sign_info['romanized']}:"""
         
         try:
             completion = self.client.chat.completions.create(
-                model="meta-llama/Llama-3.2-3B-Instruct",  # Free, reliable model
+                model="meta-llama/Llama-3.2-3B-Instruct",  # Free model ho
                 messages=[
                     {
                         "role": "system",
-                        "content": "You write horoscopes. Write only the horoscope sentence itself. Follow the exact format shown in the example. Do not add any rules, instructions, or meta-commentary."
+                        "content": "You write horoscopes, try to stick to the format but feel free to do anything within the format. try not to repeat the names, Write only the horoscope sentence itself. Follow the exact format shown in the example. Do not add any rules, instructions, or meta-commentary."
                     },
                     {
                         "role": "user",
@@ -282,15 +282,15 @@ def main():
         success = bot.post_tweet(rashifal, sign)
         
         if success:
-            print("\n✅ Bot completed successfully!")
-            print("Check your Twitter account for the new tweet!")
+            print("bhayo man!")
+
             return 0
         else:
-            print("\n⚠️ Bot completed with warnings")
+            print("\n⚠️ check gara ta")
             return 1
             
     except Exception as e:
-        print(f"\n❌ Bot failed: {e}")
+        print(f"\n bhayena: {e}")
         import traceback
         traceback.print_exc()
         return 1
