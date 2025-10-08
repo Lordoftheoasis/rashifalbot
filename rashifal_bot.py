@@ -1,9 +1,4 @@
-
 #!/usr/bin/env python3
-"""
-Rashifal Twitter Bot - Standalone version for GitHub Actions
-Posts horoscope tweets with proper romanization
-"""
 
 import os
 import random
@@ -139,7 +134,7 @@ Now write for {sign_info['romanized']}:"""
         
         try:
             completion = self.client.chat.completions.create(
-                model="openai/gpt-oss-20b:nebius",
+                model="meta-llama/Llama-3.2-3B-Instruct",  # Free, reliable model
                 messages=[
                     {
                         "role": "system",
@@ -241,8 +236,36 @@ def main():
     print(f"📅 {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 50)
     
+    # Check environment variables
+    print("\n🔐 Checking environment variables...")
+    required_vars = [
+        'HF_TOKEN',
+        'TWITTER_CONSUMER_KEY',
+        'TWITTER_CONSUMER_SECRET',
+        'TWITTER_ACCESS_TOKEN',
+        'TWITTER_ACCESS_TOKEN_SECRET',
+        'TWITTER_BEARER_TOKEN'
+    ]
+    
+    missing_vars = []
+    for var in required_vars:
+        value = os.environ.get(var)
+        if not value:
+            missing_vars.append(var)
+            print(f"❌ {var}: NOT SET")
+        else:
+            # Show first/last 4 chars for verification
+            masked = f"{value[:4]}...{value[-4:]}" if len(value) > 8 else "***"
+            print(f"✅ {var}: {masked}")
+    
+    if missing_vars:
+        print(f"\n❌ Missing secrets: {', '.join(missing_vars)}")
+        print("Please add these in GitHub Settings → Secrets and variables → Actions")
+        return 1
+    
     try:
         # Initialize bot
+        print("\n🤖 Initializing bot...")
         bot = RashifalBot()
         
         # Pick random sign
@@ -260,6 +283,7 @@ def main():
         
         if success:
             print("\n✅ Bot completed successfully!")
+            print("Check your Twitter account for the new tweet!")
             return 0
         else:
             print("\n⚠️ Bot completed with warnings")
