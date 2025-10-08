@@ -198,12 +198,11 @@ Write for {sign_info['romanized']}:"""
                         
                         # Add period if missing
                         if rashifal_text and not rashifal_text.endswith(('.', '!', '?')):
-                            if len(rashifal_text.split()) > 15:
-                                rashifal_text = None
-                            else:
-                                rashifal_text = rashifal_text.rstrip(',') + '.'
+                            rashifal_text = rashifal_text.rstrip(',') + '.'
                     
                     if rashifal_text:
+                        print(f"🎯 Raw generated: {raw_text}")
+                        print(f"✨ Cleaned: {rashifal_text}")
                         return rashifal_text
             
             # If generation fails completely, raise error instead of using fallback
