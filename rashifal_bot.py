@@ -138,7 +138,7 @@ Now write for {sign_info['romanized']}:"""
                 messages=[
                     {
                         "role": "system",
-                        "content": "You write horoscopes, try to stick to the format but feel free to do anything within the format. try not to repeat the names, Write only the horoscope sentence itself. Follow the exact format shown in the example. Do not add any rules, instructions, or meta-commentary."
+                        "content": "You write horoscopes, try to stick to the format but feel free to do anything within the format. try not to repeat the names, Write only the horoscope sentence itself. Follow the exact format shown in the example. Do not add any instructions, or meta-commentary."
                     },
                     {
                         "role": "user",
