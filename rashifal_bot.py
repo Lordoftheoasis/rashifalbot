@@ -37,6 +37,22 @@ class RashifalBot:
             {"nepali": "कुम्भ", "romanized": "Kumbha", "english": "Aquarius", "emoji": "♒"},
             {"nepali": "मीन", "romanized": "Mīna", "english": "Pisces", "emoji": "♓"}
         ]
+        
+        # Sign personality traits (updated with more nuance)
+        self.personalities = {
+            "Aries": "impulsive trailblazer, energetic and enthusiastic, drags people on adventures, makes hasty decisions, natural leader who thrives on challenges",
+            "Taurus": "stubborn bull, loves comfort and luxury, incredibly reliable but resistant to change, appreciates good food and beauty",
+            "Gemini": "social butterfly with the twins, quick-witted and charming, talks to everyone, versatile but inconsistent, indecisive",
+            "Cancer": "emotional crab, deeply intuitive nurturer, connected to home and family, moody and sensitive, offers shoulder to cry on",
+            "Leo": "confident lion, natural performer who loves spotlight, generous and warm-hearted protector, can seem arrogant, undeniably loyal",
+            "Virgo": "precise virgin, analytical and detail-oriented, strives for perfection, overly critical but wants to help, meticulous attention to everything",
+            "Libra": "diplomatic scales, sees both sides, values fairness and beauty, thrives in artistic environments, quest for balance leads to indecisiveness",
+            "Scorpio": "intense scorpion, passionate and magnetic, deeply loyal but secretive, vengeful if crossed, transforms and rises from challenges",
+            "Sagittarius": "philosophical archer, optimistic freedom-lover, seeks knowledge and experiences, straightforward honesty mistaken for tactlessness",
+            "Capricorn": "ambitious goat, hardworking and disciplined, achieves success through perseverance, serious and stern, strong sense of responsibility",
+            "Aquarius": "innovative water bearer, forward-thinking humanitarian, independent and values freedom, unconventional ideas seem eccentric, visionary",
+            "Pisces": "dreamy fish, intuitive and compassionate, creative and imaginative, sensitive leading to escapism, boundless empathy and kindness"
+        }
     
     def setup_twitter(self):
         """Setup Twitter API from environment variables"""
@@ -120,66 +136,89 @@ class RashifalBot:
         
         return text
     
-    def get_sign_personality(self, sign_english):
-        """Get personality traits for each sign"""
-        personalities = {
-            "Aries": "impulsive, competitive, always rushing, terrible at texting back, starts fights",
-            "Taurus": "stubborn, food-obsessed, never changes their mind, slow to move on, materialistic",
-            "Gemini": "two-faced, can't commit, texts everyone, gossips constantly, contradicts themselves",
-            "Cancer": "clingy, emotional, holds grudges forever, plays victim, manipulates with tears",
-            "Leo": "attention-seeking, dramatic, makes everything about them, needs constant validation",
-            "Virgo": "critical, perfectionist, judges everyone, overthinks everything, passive-aggressive",
-            "Libra": "indecisive, people-pleasing, avoids conflict, serial dater, fake nice",
-            "Scorpio": "possessive, vengeful, stalks exes, intimidating, keeps secrets",
-            "Sagittarius": "commitment-phobic, blunt, ghosting expert, can't sit still, brutal honesty",
-            "Capricorn": "workaholic, emotionally unavailable, status-obsessed, cold, calculating",
-            "Aquarius": "detached, emotionally distant, thinks they're special, rebel without a cause",
-            "Pisces": "delusional, martyr complex, escapes reality, always the victim, overly sensitive"
-        }
-        return personalities.get(sign_english, "")
-    
     def generate_rashifal(self, sign_info):
         """Generate rashifal for a sign"""
         
         # Get sign personality traits
-        personality = self.get_sign_personality(sign_info['english'])
+        personality = self.personalities[sign_info['english']]
         
         # Pick random other sign for relational horoscopes
         other_signs = [s for s in self.zodiac_signs if s['english'] != sign_info['english']]
         other_sign = random.choice(other_signs)
         
-        # Enhanced prompt with sign-specific personality and relational elements
-        prompt = f"""Write ONE witty, slightly brutal horoscope for {sign_info['romanized']} ({sign_info['english']}).
+        # Randomly choose positive or negative tone (30% positive, 70% negative)
+        tone = "positive" if random.random() < 0.3 else "negative"
+        
+        if tone == "positive":
+            prompt = f"""Write ONE witty, uplifting but still funny horoscope for {sign_info['romanized']} ({sign_info['english']}).
+
+{sign_info['english']} traits: {personality}
+
+Examples of POSITIVE but funny style:
+- "{sign_info['romanized']}, your overthinking is finally paying off."
+- "{sign_info['romanized']}, someone finally appreciates your intensity."
+- "{sign_info['romanized']}, your stubbornness is about to work in your favor."
+
+Be encouraging but keep it witty and slightly sarcastic.
+Start ONLY with: {sign_info['romanized']}, [your message].
+
+Write for {sign_info['romanized']}:"""
+        else:
+            prompt = f"""Write ONE witty, brutally honest horoscope for {sign_info['romanized']} ({sign_info['english']}).
 
 {sign_info['english']} traits: {personality}
 
 Write in one of these styles:
-1. Direct callout: "{sign_info['romanized']}, stop pretending you're over it when you check their story every day."
-2. Relational/comparative: "{sign_info['romanized']}, to {other_sign['romanized']} you are somewhere between a painful reminder and a terrible dream."
-3. Brutally honest observation: "{sign_info['romanized']}, your standards aren't high, you just want someone who doesn't exist."
+1. Direct callout: "{sign_info['romanized']}, they're not 'the one that got away', they literally ran."
+2. Relational: "{sign_info['romanized']}, to {other_sign['romanized']} you are a beautiful disaster they can't look away from."
+3. Sign interaction: "{sign_info['romanized']}, make the first move. {other_sign['romanized']} is waiting."
+4. Brutal truth: "{sign_info['romanized']}, your gut feeling is just anxiety with better PR."
 
-Be witty, sarcastic, brutally honest, and reference their actual zodiac personality traits.
+Be witty, sarcastic, brutally honest. Reference their zodiac personality.
+Can include other signs in the message randomly.
 Start ONLY with: {sign_info['romanized']}, [your witty message].
 
 Write for {sign_info['romanized']}:"""
         
+        max_retries = 3
+        retry_count = 0
+        
+        while retry_count < max_retries:
+            try:
+                completion = self.client.chat.completions.create(
+                    model="meta-llama/Llama-3.2-3B-Instruct",
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": f"You write {'uplifting but' if tone == 'positive' else 'brutally honest,'} witty horoscopes that call people out. Be sarcastic and reference actual zodiac stereotypes. Keep it one sentence. No meta-commentary, no instructions, just the horoscope itself."
+                        },
+                        {
+                            "role": "user",
+                            "content": prompt
+                        }
+                    ],
+                    max_tokens=100,
+                    temperature=0.9
+                )
+                
+                # If we got here, API call succeeded
+                break
+                
+            except Exception as api_error:
+                retry_count += 1
+                if "rate limit" in str(api_error).lower():
+                    if retry_count < max_retries:
+                        print(f"⚠️ Rate limit hit, attempt {retry_count}/{max_retries}")
+                        print(f"   Waiting 60 seconds before retry...")
+                        import time
+                        time.sleep(60)
+                    else:
+                        print(f"❌ Rate limit exceeded after {max_retries} attempts")
+                        raise Exception("Rate limit exceeded, cannot generate horoscope")
+                else:
+                    raise api_error
+        
         try:
-            completion = self.client.chat.completions.create(
-                model="meta-llama/Llama-3.2-3B-Instruct",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You write brutally honest, witty horoscopes that call people out. Be sarcastic and reference actual zodiac stereotypes. Keep it one sentence. No meta-commentary, no instructions, just the horoscope itself."
-                    },
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ],
-                max_tokens=100,
-                temperature=0.9
-            )
-            
             if completion and completion.choices:
                 message = completion.choices[0].message
                 
@@ -203,9 +242,10 @@ Write for {sign_info['romanized']}:"""
                     if rashifal_text:
                         print(f"🎯 Raw generated: {raw_text}")
                         print(f"✨ Cleaned: {rashifal_text}")
+                        print(f"🎭 Tone: {tone}")
                         return rashifal_text
             
-            # If generation fails completely, raise error instead of using fallback
+            # If generation fails completely, raise error
             raise Exception("Failed to generate valid horoscope")
             
         except Exception as e:
