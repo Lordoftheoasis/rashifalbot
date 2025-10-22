@@ -159,6 +159,11 @@ Examples of POSITIVE but funny style:
 - "{sign_info['romanized']}, someone finally appreciates your intensity."
 - "{sign_info['romanized']}, your stubbornness is about to work in your favor."
 
+CRITICAL: If you mention ANY other zodiac sign, you MUST use their romanized Nepali name:
+Meṣa (Aries), Vṛṣabha (Taurus), Mithuna (Gemini), Karkaṭa (Cancer), Siṃha (Leo), Kanyā (Virgo), Tulā (Libra), Vṛśchika (Scorpio), Dhanu (Sagittarius), Makara (Capricorn), Kumbha (Aquarius), Mīna (Pisces)
+
+NEVER use English zodiac names like Taurus, Virgo, Leo, etc. ONLY use romanized names.
+
 Be encouraging but keep it witty and slightly sarcastic.
 Start ONLY with: {sign_info['romanized']}, [your message].
 
@@ -173,6 +178,11 @@ Write in one of these styles:
 2. Relational: "{sign_info['romanized']}, to {other_sign['romanized']} you are a beautiful disaster they can't look away from."
 3. Sign interaction: "{sign_info['romanized']}, make the first move. {other_sign['romanized']} is waiting."
 4. Brutal truth: "{sign_info['romanized']}, your gut feeling is just anxiety with better PR."
+
+CRITICAL: If you mention ANY other zodiac sign, you MUST use their romanized Nepali name:
+Meṣa (Aries), Vṛṣabha (Taurus), Mithuna (Gemini), Karkaṭa (Cancer), Siṃha (Leo), Kanyā (Virgo), Tulā (Libra), Vṛśchika (Scorpio), Dhanu (Sagittarius), Makara (Capricorn), Kumbha (Aquarius), Mīna (Pisces)
+
+NEVER use English zodiac names like Taurus, Virgo, Leo, etc. ONLY use romanized names.
 
 Be witty, sarcastic, brutally honest. Reference their zodiac personality.
 Can include other signs in the message randomly.
