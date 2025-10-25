@@ -1,4 +1,41 @@
-#!/usr/bin/env python3
+if tone == "positive":
+            prompt = f"""Write ONE short, vague, witty horoscope for {sign_info['romanized']}.
+
+Keep it SHORT - maximum 2 sentences, preferably 1 sentence.
+Be vague and mysterious, not descriptive.
+
+Examples of SHORT, VAGUE style:
+- "{sign_info['romanized']}, your patience is about to pay off."
+- "Someone sees you differently now, {sign_info['romanized']}."
+- "{sign_info['romanized']}, trust what you already know."
+- "Your instincts were right, {sign_info['romanized']}."
+
+CRITICAL: If mentioning another sign, use ONLY romanized names:
+Meṣa, Vṛṣabha, Mithuna, Karkaṭa, Siṃha, Kanyā, Tulā, Vṛśchika, Dhanu, Makara, Kumbha, Mīna
+
+NO long descriptions. NO explanations. Just short, vague, impactful.
+
+Write for {sign_info['romanized']}:"""
+        else:
+            prompt = f"""Write ONE short, vague, witty horoscope for {sign_info['romanized']}.
+
+Keep it SHORT - maximum 2 sentences, preferably 1 sentence.
+Be vague and mysterious, not descriptive.
+
+Examples of SHORT, VAGUE style:
+- "Your actions have consequences, {sign_info['romanized']}."
+- "{other_sign['romanized']} won't wait much longer, {sign_info['romanized']}."
+- "You're not as innocent as you look, {sign_info['romanized']}."
+- "{sign_info['romanized']}, they know what you did."
+- "Stop pretending, {sign_info['romanized']}."
+- "{sign_info['romanized']}, {other_sign['romanized']} sees right through you."
+
+CRITICAL: If mentioning another sign, use ONLY romanized names:
+Meṣa, Vṛṣabha, Mithuna, Karkaṭa, Siṃha, Kanyā, Tulā, Vṛśchika, Dhanu, Makara, Kumbha, Mīna
+
+NO long descriptions. NO explanations. Just short, vague, impactful.
+
+Write for {sign_info['romanized']}:"""#!/usr/bin/env python3
 
 import os
 import random
