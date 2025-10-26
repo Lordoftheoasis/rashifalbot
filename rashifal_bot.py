@@ -1,41 +1,4 @@
-if tone == "positive":
-            prompt = f"""Write ONE short, vague, witty horoscope for {sign_info['romanized']}.
-
-Keep it SHORT - maximum 2 sentences, preferably 1 sentence.
-Be vague and mysterious, not descriptive.
-
-Examples of SHORT, VAGUE style:
-- "{sign_info['romanized']}, your patience is about to pay off."
-- "Someone sees you differently now, {sign_info['romanized']}."
-- "{sign_info['romanized']}, trust what you already know."
-- "Your instincts were right, {sign_info['romanized']}."
-
-CRITICAL: If mentioning another sign, use ONLY romanized names:
-Meṣa, Vṛṣabha, Mithuna, Karkaṭa, Siṃha, Kanyā, Tulā, Vṛśchika, Dhanu, Makara, Kumbha, Mīna
-
-NO long descriptions. NO explanations. Just short, vague, impactful.
-
-Write for {sign_info['romanized']}:"""
-        else:
-            prompt = f"""Write ONE short, vague, witty horoscope for {sign_info['romanized']}.
-
-Keep it SHORT - maximum 2 sentences, preferably 1 sentence.
-Be vague and mysterious, not descriptive.
-
-Examples of SHORT, VAGUE style:
-- "Your actions have consequences, {sign_info['romanized']}."
-- "{other_sign['romanized']} won't wait much longer, {sign_info['romanized']}."
-- "You're not as innocent as you look, {sign_info['romanized']}."
-- "{sign_info['romanized']}, they know what you did."
-- "Stop pretending, {sign_info['romanized']}."
-- "{sign_info['romanized']}, {other_sign['romanized']} sees right through you."
-
-CRITICAL: If mentioning another sign, use ONLY romanized names:
-Meṣa, Vṛṣabha, Mithuna, Karkaṭa, Siṃha, Kanyā, Tulā, Vṛśchika, Dhanu, Makara, Kumbha, Mīna
-
-NO long descriptions. NO explanations. Just short, vague, impactful.
-
-Write for {sign_info['romanized']}:"""#!/usr/bin/env python3
+#!/usr/bin/env python3
 
 import os
 import random
@@ -187,43 +150,41 @@ class RashifalBot:
         tone = "positive" if random.random() < 0.3 else "negative"
         
         if tone == "positive":
-            prompt = f"""Write ONE witty, uplifting but still funny horoscope for {sign_info['romanized']} ({sign_info['english']}).
+            prompt = f"""Write ONE short, vague, witty horoscope for {sign_info['romanized']}.
 
-{sign_info['english']} traits: {personality}
+Keep it SHORT - maximum 2 sentences, preferably 1 sentence.
+Be vague and mysterious, not descriptive.
 
-Examples of POSITIVE but funny style:
-- "{sign_info['romanized']}, your overthinking is finally paying off."
-- "{sign_info['romanized']}, someone finally appreciates your intensity."
-- "{sign_info['romanized']}, your stubbornness is about to work in your favor."
+Examples of SHORT, VAGUE style:
+- "{sign_info['romanized']}, your patience is about to pay off."
+- "Someone sees you differently now, {sign_info['romanized']}."
+- "{sign_info['romanized']}, trust what you already know."
+- "Your instincts were right, {sign_info['romanized']}."
 
-CRITICAL: If you mention ANY other zodiac sign, you MUST use their romanized Nepali name:
-Meṣa (Aries), Vṛṣabha (Taurus), Mithuna (Gemini), Karkaṭa (Cancer), Siṃha (Leo), Kanyā (Virgo), Tulā (Libra), Vṛśchika (Scorpio), Dhanu (Sagittarius), Makara (Capricorn), Kumbha (Aquarius), Mīna (Pisces)
+CRITICAL: If mentioning another sign, use ONLY romanized names:
+Meṣa, Vṛṣabha, Mithuna, Karkaṭa, Siṃha, Kanyā, Tulā, Vṛśchika, Dhanu, Makara, Kumbha, Mīna
 
-NEVER use English zodiac names like Taurus, Virgo, Leo, etc. ONLY use romanized names.
-
-Be encouraging but keep it witty and slightly sarcastic.
-Start ONLY with: {sign_info['romanized']}, [your message].
+NO long descriptions. NO explanations. Just short, vague, impactful.
 
 Write for {sign_info['romanized']}:"""
         else:
-            prompt = f"""Write ONE witty, brutally honest horoscope for {sign_info['romanized']} ({sign_info['english']}).
+            prompt = f"""Write ONE short, vague, witty horoscope for {sign_info['romanized']}.
 
-{sign_info['english']} traits: {personality}
+Keep it SHORT - maximum 2 sentences, preferably 1 sentence.
+Be vague and mysterious, not descriptive.
 
-Write in one of these styles:
-1. Direct callout: "{sign_info['romanized']}, they're not 'the one that got away', they literally ran."
-2. Relational: "{sign_info['romanized']}, to {other_sign['romanized']} you are a beautiful disaster they can't look away from."
-3. Sign interaction: "{sign_info['romanized']}, make the first move. {other_sign['romanized']} is waiting."
-4. Brutal truth: "{sign_info['romanized']}, your gut feeling is just anxiety with better PR."
+Examples of SHORT, VAGUE style:
+- "Your actions have consequences, {sign_info['romanized']}."
+- "{other_sign['romanized']} won't wait much longer, {sign_info['romanized']}."
+- "You're not as innocent as you look, {sign_info['romanized']}."
+- "{sign_info['romanized']}, they know what you did."
+- "Stop pretending, {sign_info['romanized']}."
+- "{sign_info['romanized']}, {other_sign['romanized']} sees right through you."
 
-CRITICAL: If you mention ANY other zodiac sign, you MUST use their romanized Nepali name:
-Meṣa (Aries), Vṛṣabha (Taurus), Mithuna (Gemini), Karkaṭa (Cancer), Siṃha (Leo), Kanyā (Virgo), Tulā (Libra), Vṛśchika (Scorpio), Dhanu (Sagittarius), Makara (Capricorn), Kumbha (Aquarius), Mīna (Pisces)
+CRITICAL: If mentioning another sign, use ONLY romanized names:
+Meṣa, Vṛṣabha, Mithuna, Karkaṭa, Siṃha, Kanyā, Tulā, Vṛśchika, Dhanu, Makara, Kumbha, Mīna
 
-NEVER use English zodiac names like Taurus, Virgo, Leo, etc. ONLY use romanized names.
-
-Be witty, sarcastic, brutally honest. Reference their zodiac personality.
-Can include other signs in the message randomly.
-Start ONLY with: {sign_info['romanized']}, [your witty message].
+NO long descriptions. NO explanations. Just short, vague, impactful.
 
 Write for {sign_info['romanized']}:"""
         
@@ -237,14 +198,14 @@ Write for {sign_info['romanized']}:"""
                     messages=[
                         {
                             "role": "system",
-                            "content": f"You write {'uplifting but' if tone == 'positive' else 'brutally honest,'} witty horoscopes that call people out. Be sarcastic and reference actual zodiac stereotypes. Keep it one sentence. No meta-commentary, no instructions, just the horoscope itself."
+                            "content": f"You write short, vague, mysterious horoscopes. Maximum 2 sentences. Be {'uplifting' if tone == 'positive' else 'brutally honest'} but always brief and mysterious. No explanations."
                         },
                         {
                             "role": "user",
                             "content": prompt
                         }
                     ],
-                    max_tokens=100,
+                    max_tokens=60,
                     temperature=0.9
                 )
                 
