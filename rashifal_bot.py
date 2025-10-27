@@ -263,19 +263,18 @@ Write for {sign_info['romanized']}:"""
     def post_tweet(self, rashifal, sign_info):
         """Post rashifal to Twitter"""
         try:
-            # Extract message
-            message_part = rashifal
+            # Clean the generated text
+            rashifal = self.clean_ai_text(rashifal)
+            
+            # If it already starts with the sign name, use it as is
             if rashifal.startswith(sign_info['romanized']):
-                message_part = rashifal[len(sign_info['romanized']):].lstrip(', ')
-            
-            message_part = self.clean_ai_text(message_part)
-            
-            # Capitalize first letter
-            if message_part:
-                message_part = message_part[0].upper() + message_part[1:]
-            
-            # Format tweet
-            tweet_text = f"{sign_info['romanized']}, {message_part}"
+                tweet_text = rashifal
+            else:
+                # Otherwise, add the sign name at the beginning
+                # Capitalize first letter of message
+                if rashifal:
+                    rashifal = rashifal[0].upper() + rashifal[1:]
+                tweet_text = f"{sign_info['romanized']}, {rashifal}"
             
             # Post
             if self.use_v1_api and self.twitter_api_v1:
