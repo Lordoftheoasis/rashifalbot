@@ -146,45 +146,99 @@ class RashifalBot:
         other_signs = [s for s in self.zodiac_signs if s['english'] != sign_info['english']]
         other_sign = random.choice(other_signs)
         
-        # Randomly choose positive or negative tone (30% positive, 70% negative)
-        tone = "positive" if random.random() < 0.3 else "negative"
+        # Randomly choose positive or negative tone (10% positive, 90% negative)
+        tone = "positive" if random.random() < 0.1 else "negative"
         
         if tone == "positive":
-            prompt = f"""Write ONE short, vague, witty horoscope for {sign_info['romanized']}.
+            prompt = f"""Write ONE witty, slightly uplifting horoscope for {sign_info['romanized']} ({sign_info['english']}).
 
-Keep it SHORT - maximum 2 sentences, preferably 1 sentence.
-Be vague and mysterious, not descriptive.
+{sign_info['english']} traits: {personality}
 
-Examples of SHORT, VAGUE style:
-- "{sign_info['romanized']}, your patience is about to pay off."
-- "Someone sees you differently now, {sign_info['romanized']}."
-- "{sign_info['romanized']}, trust what you already know."
-- "Your instincts were right, {sign_info['romanized']}."
+Examples:
+- "{sign_info['romanized']}, your overthinking is finally paying off."
+- "{sign_info['romanized']}, someone finally appreciates your intensity."
+- "Your instincts were right all along, {sign_info['romanized']}."
+
+Keep it natural length (10-20 words). Be encouraging but still witty.
 
 CRITICAL: If mentioning another sign, use ONLY romanized names:
 Meṣa, Vṛṣabha, Mithuna, Karkaṭa, Siṃha, Kanyā, Tulā, Vṛśchika, Dhanu, Makara, Kumbha, Mīna
 
-NO long descriptions. NO explanations. Just short, vague, impactful.
+Start with: {sign_info['romanized']}, [your message].
 
 Write for {sign_info['romanized']}:"""
         else:
-            prompt = f"""Write ONE short, vague, witty horoscope for {sign_info['romanized']}.
+            prompt = f"""Write ONE witty, snarky, brutally honest horoscope for {sign_info['romanized']} ({sign_info['english']}).
 
-Keep it SHORT - maximum 2 sentences, preferably 1 sentence.
-Be vague and mysterious, not descriptive.
+{sign_info['english']} traits: {personality}
 
-Examples of SHORT, VAGUE style:
-- "Your actions have consequences, {sign_info['romanized']}."
-- "{other_sign['romanized']} won't wait much longer, {sign_info['romanized']}."
-- "You're not as innocent as you look, {sign_info['romanized']}."
-- "{sign_info['romanized']}, they know what you did."
-- "Stop pretending, {sign_info['romanized']}."
-- "{sign_info['romanized']}, {other_sign['romanized']} sees right through you."
+Examples of SNARKY, MEAN style:
+{sign_info['romanized']}, pretending you don’t care is getting exhausting; isn’t it?
+Love isn’t dead, {sign_info['romanized']}; it’s just ignoring your texts.
+You weren’t ghosted, {sign_info['romanized']}; you were spiritually redirected.
+{sign_info['romanized']}, stop calling it a ‘situationship’; it’s a warning sign.
+You wanted closure, {sign_info['romanized']}; but you really wanted control.
+They didn’t change, {sign_info['romanized']}; you just stopped making excuses.
+If it feels like deja vu, {sign_info['romanized']}; that’s just your bad decisions looping.
+{sign_info['romanized']}, maybe it’s time to let go; of them and the playlist.
+{sign_info['romanized']}, healing isn’t an aesthetic.
+You call it intuition, {sign_info['romanized']}; everyone else calls it paranoia.
+You’re not ‘over it,’ {sign_info['romanized']}; you’re just emotionally numb.
+Your peace is fragile, {sign_info['romanized']}; handle with caffeine.
+You’re not mysterious, {sign_info['romanized']}; you’re just emotionally unavailable.
+{sign_info['romanized']}, you keep saying ‘it’s fine’ like it ever was.
+The universe isn’t testing you, {sign_info['romanized']}; you just refuse to learn.
+{sign_info['romanized']}, stop calling self-sabotage ‘a vibe.’
+{sign_info['romanized']}, you don’t need a sign; you need therapy and better taste.
+You can’t manifest accountability, {sign_info['romanized']}.
+{sign_info['romanized']}, that ‘new chapter’ you’re starting looks suspiciously like a rerun.
+The stars say rest; your bank account says grind, {sign_info['romanized']}.
+Mercury isn’t in retrograde, {sign_info['romanized']}; you just made bad choices.
+You said ‘new era’ but kept the same habits, {sign_info['romanized']}.
+The energy’s off because you are, {sign_info['romanized']}.
+{sign_info['romanized']}, your coping mechanisms deserve a performance review.
+You’re not unlucky, {sign_info['romanized']}; you’re just consistent in chaos.
+{sign_info['romanized']}, take a break from pretending you’re okay; you’ve earned it.
+The stars are tired of warning you, {sign_info['romanized']}.
+{sign_info['romanized']}, the universe is subtweeting you again.
+{sign_info['romanized']}, stop overthinking; no one’s plotting against you, they’re just busy.
+{sign_info['romanized']}, not everyone who smiles at you likes you; this isn’t Kathmandu traffic.
+{sign_info['romanized']}, stop refreshing their story; Wi-Fi pani thakcha.
+{sign_info['romanized']}, love isn’t astrology-proof; even if you blame Saturn every time.
+You said you’re focusing on yourself, {sign_info['romanized']}; but you’re still online at 2 a.m.
+{sign_info['romanized']}, maybe stop texting your ex every time it rains.
+{sign_info['romanized']}, calling it ‘main character energy’ doesn’t make the chaos cinematic.
+{sign_info['romanized']}, you’re not manifesting; you’re just procrastinating with incense.
+{sign_info['romanized']}, not everything is a cosmic sign; some things are just bad life choices.
+{sign_info['romanized']}, your toxic trait is thinking everyone’s your soulmate after one tea break.
+{sign_info['romanized']}, stop expecting closure from people who can’t even reply ‘ok’.
+{sign_info['romanized']}, they didn’t ghost you; it’s just load-shedding of emotions.
+You can’t vibe your way out of consequences, {sign_info['romanized']}.
+{sign_info['romanized']}, if they cared, they’d reply before the next load-shedding schedule.
+The universe isn’t sending mixed signals, {sign_info['romanized']}; that’s just you refreshing messages again.
+{sign_info['romanized']}, stop saying it’s the planets; it’s just poor decision-making in HD.
+You don’t need the stars, {sign_info['romanized']}; you need sleep and a data pack.
+{sign_info['romanized']}, you can’t heal in Thamel and call it self-discovery.
+{sign_info['romanized']}, your karmic debt looks like an eSewa balance right now; zero.
+{sign_info['romanized']}, you keep chasing people like microbuses chase passengers; desperate and loud.
+{sign_info['romanized']}, don’t blame Mercury; blame that 2 a.m. call to your ex.
+{sign_info['romanized']}, you say you’re manifesting peace but still arguing in group chats.
+{sign_info['romanized']}, your heart’s been broken so often it needs a Sajha bus schedule.
+{sign_info['romanized']}, stop posting “new beginnings”; you said that last Dashain too.
+{sign_info['romanized']}, not everything is deep; some of it is just poor Wi-Fi and worse timing.
+{sign_info['romanized']}, the planets aren’t against you; you’re just late again.
+{sign_info['romanized']}, stop calling it healing; you’re just in Pokhara again.
+{sign_info['romanized']}, your aura looks like traffic near Kalanki right now.
+{sign_info['romanized']}, stop flirting like you’re bargaining at Asan.
+{sign_info['romanized']}, maybe meditate; or at least uninstall Instagram for a week.
+{sign_info['romanized']}, your “new mindset” still complains about horoscope posts.
+{sign_info['romanized']}, not every vibe check is cosmic; some are just karma catching up.
+{sign_info['romanized']}, you don’t need a tarot reading; you need to log off and touch some hills
+Be MEAN, SNARKY, call them out. Reference zodiac traits. Natural length (15-30 words).
 
-CRITICAL: If mentioning another sign, use ONLY romanized names:
-Meṣa, Vṛṣabha, Mithuna, Karkaṭa, Siṃha, Kanyā, Tulā, Vṛśchika, Dhanu, Makara, Kumbha, Mīna
+CRITICAL: If mentioning another sign, use ONLY romanized names, do not repeat the same sign names twice
 
-NO long descriptions. NO explanations. Just short, vague, impactful.
+Start with: {sign_info['romanized']}, [your snarky message].
 
 Write for {sign_info['romanized']}:"""
         
@@ -198,14 +252,14 @@ Write for {sign_info['romanized']}:"""
                     messages=[
                         {
                             "role": "system",
-                            "content": f"You write short, vague, mysterious horoscopes. Maximum 2 sentences. Be {'uplifting' if tone == 'positive' else 'brutally honest'} but always brief and mysterious. No explanations."
+                            "content": f"You write {'slightly uplifting' if tone == 'positive' else 'brutally honest, mean, snarky'} horoscopes. Be witty and {'encouraging' if tone == 'positive' else 'call people out on their BS'}. Natural length, not too short or long."
                         },
                         {
                             "role": "user",
                             "content": prompt
                         }
                     ],
-                    max_tokens=60,
+                    max_tokens=80,
                     temperature=0.9
                 )
                 
@@ -216,12 +270,12 @@ Write for {sign_info['romanized']}:"""
                 retry_count += 1
                 if "rate limit" in str(api_error).lower():
                     if retry_count < max_retries:
-                        print(f"⚠️ Rate limit hit, attempt {retry_count}/{max_retries}")
+                        print(f" Rate limit hit, attempt {retry_count}/{max_retries}")
                         print(f"   Waiting 60 seconds before retry...")
                         import time
                         time.sleep(60)
                     else:
-                        print(f"❌ Rate limit exceeded after {max_retries} attempts")
+                        print(f" Rate limit exceeded after {max_retries} attempts")
                         raise Exception("Rate limit exceeded, cannot generate horoscope")
                 else:
                     raise api_error
@@ -248,16 +302,16 @@ Write for {sign_info['romanized']}:"""
                             rashifal_text = rashifal_text.rstrip(',') + '.'
                     
                     if rashifal_text:
-                        print(f"🎯 Raw generated: {raw_text}")
-                        print(f"✨ Cleaned: {rashifal_text}")
-                        print(f"🎭 Tone: {tone}")
+                        print(f" Raw generated: {raw_text}")
+                        print(f" Cleaned: {rashifal_text}")
+                        print(f" Tone: {tone}")
                         return rashifal_text
             
             # If generation fails completely, raise error
             raise Exception("Failed to generate valid horoscope")
             
         except Exception as e:
-            print(f"❌ Generation error: {e}")
+            print(f" Generation error: {e}")
             raise
     
     def post_tweet(self, rashifal, sign_info):
@@ -284,15 +338,15 @@ Write for {sign_info['romanized']}:"""
                 response = self.twitter_client.create_tweet(text=tweet_text)
                 tweet_id = response.data['id']
             
-            print(f"✅ Tweet posted successfully!")
-            print(f"🐦 Tweet: {tweet_text}")
-            print(f"🔗 Tweet ID: {tweet_id}")
-            print(f"📊 Characters: {len(tweet_text)}/280")
+            print(f" Tweet posted successfully!")
+            print(f" Tweet: {tweet_text}")
+            print(f" Tweet ID: {tweet_id}")
+            print(f" Characters: {len(tweet_text)}/280")
             
             return True
             
         except Exception as e:
-            print(f"❌ Tweet failed: {e}")
+            print(f" Tweet failed: {e}")
             return False
 
 def main():
@@ -302,7 +356,7 @@ def main():
     print("=" * 50)
     
     # Check environment variables
-    print("\n🔐 Checking environment variables...")
+    print("\n Checking environment variables...")
     required_vars = [
         'HF_TOKEN',
         'TWITTER_CONSUMER_KEY',
@@ -317,14 +371,14 @@ def main():
         value = os.environ.get(var)
         if not value:
             missing_vars.append(var)
-            print(f"❌ {var}: NOT SET")
+            print(f" {var}: NOT SET")
         else:
             # Show first/last 4 chars for verification
             masked = f"{value[:4]}...{value[-4:]}" if len(value) > 8 else "***"
             print(f"bhayo {var}: {masked}")
     
     if missing_vars:
-        print(f"\n❌ Missing secrets: {', '.join(missing_vars)}")
+        print(f"\n Missing secrets: {', '.join(missing_vars)}")
         print("Please add these in GitHub Settings → Secrets and variables → Actions")
         return 1
     
@@ -335,12 +389,12 @@ def main():
         
         # Pick random sign
         sign = random.choice(bot.zodiac_signs)
-        print(f"\n🎯 Selected sign: {sign['romanized']} ({sign['english']})")
+        print(f"\n Selected sign: {sign['romanized']} ({sign['english']})")
         
         # Generate rashifal
-        print("🔄 Generating rashifal...")
+        print(" Generating rashifal...")
         rashifal = bot.generate_rashifal(sign)
-        print(f"✨ Generated: {rashifal}")
+        print(f" Generated: {rashifal}")
         
         # Post to Twitter
         print("\n📤 Posting to Twitter...")
@@ -350,7 +404,7 @@ def main():
             print("bhayo man!")
             return 0
         else:
-            print("\n⚠️ check gara ta")
+            print("\n check gara ta")
             return 1
             
     except Exception as e:
