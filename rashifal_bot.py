@@ -110,6 +110,19 @@ class RashifalBot:
             'Pisces': 'Mīna'
         }
         
+        # First, fix broken words where sign names are inserted (e.g., recaTulāte -> recalibrate)
+        # Remove romanized names that appear in the middle of words
+        all_nepali_names = list(english_to_nepali.values())
+        for nepali_name in all_nepali_names:
+            # Find patterns like "reca[Tulā]te" and remove the sign name
+            pattern = r'([a-z])' + re.escape(nepali_name) + r'([a-z])'
+            matches = re.findall(pattern, text)
+            for match in matches:
+                # This is likely a broken word, remove the sign name
+                broken = match[0] + nepali_name + match[1]
+                # Try to reconstruct the original word
+                text = text.replace(broken, match[0] + match[1])
+        
         for english, nepali in english_to_nepali.items():
             # Replace possessive forms too (e.g., "Libra's" -> "Tulā's")
             text = text.replace(f"{english}'s", f"{nepali}'s")
@@ -219,10 +232,12 @@ Examples of SNARKY, MEAN style:
 
 Be MEAN, SNARKY, call them out. Natural length (15-30 words).
 
-NEVER use English zodiac names (Aries, Taurus, Gemini, Cancer, Leo, Virgo, Libra, Scorpio, Sagittarius, Capricorn, Aquarius, Pisces).
-ONLY use romanized Nepali names: Meṣa, Vṛṣabha, Mithuna, Karkaṭa, Siṃha, Kanyā, Tulā, Vṛśchika, Dhanu, Makara, Kumbha, Mīna
-
-Do NOT repeat the sign name twice in one horoscope.
+CRITICAL RULES:
+- NEVER use English zodiac names (Aries, Taurus, Gemini, Cancer, Leo, Virgo, Libra, Scorpio, Sagittarius, Capricorn, Aquarius, Pisces)
+- ONLY use romanized Nepali names at the START: Meṣa, Vṛṣabha, Mithuna, Karkaṭa, Siṃha, Kanyā, Tulā, Vṛśchika, Dhanu, Makara, Kumbha, Mīna
+- Do NOT repeat the sign name twice in one horoscope
+- Do NOT insert sign names into regular words (write "recalibrate" not "recaTulāte")
+- Sign names should ONLY appear at the beginning of the horoscope, not in the middle of sentences
 
 Write for {sign_info['romanized']}:"""
         
