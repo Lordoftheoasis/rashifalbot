@@ -92,7 +92,11 @@ class RashifalBot:
     
     def clean_ai_text(self, text):
         """Remove AI giveaways and English zodiac names"""
+        # Replace em-dashes and en-dashes with commas
         text = text.replace('—', ',').replace('–', ',')
+        
+        # Replace spaced dashes with commas
+        text = re.sub(r'\s+-\s+', ', ', text)
         
         # Replace English zodiac names with romanized ones
         english_to_nepali = {
