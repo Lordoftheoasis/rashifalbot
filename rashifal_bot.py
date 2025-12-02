@@ -242,11 +242,10 @@ CRITICAL RULES:
 - Do NOT repeat the sign name twice in one horoscope
 - Do NOT insert sign names into regular words (write "recalibrate" not "recaTulāte")
 - Sign names should ONLY appear at the beginning of the horoscope, not in the middle of sentences
-- Complete sentences, words should be sensible and be cohesive
 
 Write for {sign_info['romanized']}:"""
         
-        max_retries = 3
+        max_retries = 1
         retry_count = 0
         
         while retry_count < max_retries:
