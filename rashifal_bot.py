@@ -10,10 +10,10 @@ from openai import OpenAI
 class RashifalBot:
     def __init__(self):
         """Initialize bot with credentials from environment variables"""
-        # HuggingFace API
+        # Groq API
         self.client = OpenAI(
-            base_url="https://router.huggingface.co/v1",
-            api_key=os.environ.get('HF_TOKEN'),
+            base_url="https://api.groq.com/openai/v1",
+            api_key=os.environ.get('GROQ_API_KEY'),
         )
         
         # Twitter credentials
