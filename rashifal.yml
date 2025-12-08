@@ -24,6 +24,17 @@ jobs:
         run: |
           pip install openai tweepy
       
+      - name: Debug - Check secrets
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: |
+          echo "GROQ_API_KEY exists: ${{ secrets.GROQ_API_KEY != '' }}"
+          if [ -z "$GROQ_API_KEY" ]; then
+            echo "GROQ_API_KEY is empty!"
+          else
+            echo "GROQ_API_KEY is set (length: ${#GROQ_API_KEY})"
+          fi
+      
       - name: Run Rashifal Bot
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
