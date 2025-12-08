@@ -72,7 +72,7 @@ class RashifalBot:
                 print(f"dunn Twitter API v2 connected as @{me.data.username}")
                 return
             except:
-                print("⚠️ Twitter API v2 failed, trying v1.1...")
+                print("Twitter API v2 failed,trying v1.1...")
                 
                 # Fallback to API v1.1
                 auth = tweepy.OAuth1UserHandler(
@@ -87,7 +87,7 @@ class RashifalBot:
                 self.use_v1_api = True
                 
         except Exception as e:
-            print(f"❌ Twitter setup failed: {e}")
+            print(f" Twitter setup failed: {e}")
             raise
     
     def clean_ai_text(self, text):
@@ -273,12 +273,12 @@ Write for {sign_info['romanized']}:"""
                 retry_count += 1
                 if "rate limit" in str(api_error).lower():
                     if retry_count < max_retries:
-                        print(f"⚠️ Rate limit hit, attempt {retry_count}/{max_retries}")
+                        print(f" Rate limit hit, attempt {retry_count}/{max_retries}")
                         print(f"   Waiting 60 seconds before retry...")
                         import time
                         time.sleep(60)
                     else:
-                        print(f"❌ Rate limit exceeded after {max_retries} attempts")
+                        print(f"Rate limit exceeded after {max_retries} attempts")
                         raise Exception("Rate limit exceeded, cannot generate horoscope")
                 else:
                     raise api_error
@@ -305,16 +305,16 @@ Write for {sign_info['romanized']}:"""
                             rashifal_text = rashifal_text.rstrip(',') + '.'
                     
                     if rashifal_text:
-                        print(f"🎯 Raw generated: {raw_text}")
-                        print(f"✨ Cleaned: {rashifal_text}")
-                        print(f"🎭 Tone: {tone}")
+                        print(f" Raw generated: {raw_text}")
+                        print(f" Cleaned: {rashifal_text}")
+                        print(f" Tone: {tone}")
                         return rashifal_text
             
             # If generation fails completely, raise error
             raise Exception("Failed to generate valid horoscope")
             
         except Exception as e:
-            print(f"❌ Generation error: {e}")
+            print(f" Generation error: {e}")
             raise
     
     def post_tweet(self, rashifal, sign_info):
@@ -341,15 +341,15 @@ Write for {sign_info['romanized']}:"""
                 response = self.twitter_client.create_tweet(text=tweet_text)
                 tweet_id = response.data['id']
             
-            print(f"✅ Tweet posted successfully!")
-            print(f"🐦 Tweet: {tweet_text}")
-            print(f"🔗 Tweet ID: {tweet_id}")
-            print(f"📊 Characters: {len(tweet_text)}/280")
+            print(f" Tweet posted successfully!")
+            print(f"Tweet: {tweet_text}")
+            print(f" Tweet ID: {tweet_id}")
+            print(f"Characters: {len(tweet_text)}/280")
             
             return True
             
         except Exception as e:
-            print(f"❌ Tweet failed: {e}")
+            print(f" Tweet failed: {e}")
             return False
 
 def main():
@@ -359,9 +359,9 @@ def main():
     print("=" * 50)
     
     # Check environment variables
-    print("\n🔐 Checking environment variables...")
+    print("\n Checking environment variables...")
     required_vars = [
-        'HF_TOKEN',
+        'GROQ_API_KEY',
         'TWITTER_CONSUMER_KEY',
         'TWITTER_CONSUMER_SECRET',
         'TWITTER_ACCESS_TOKEN',
@@ -374,14 +374,14 @@ def main():
         value = os.environ.get(var)
         if not value:
             missing_vars.append(var)
-            print(f"❌ {var}: NOT SET")
+            print(f" {var}: NOT SET")
         else:
             # Show first/last 4 chars for verification
             masked = f"{value[:4]}...{value[-4:]}" if len(value) > 8 else "***"
             print(f"bhayo {var}: {masked}")
     
     if missing_vars:
-        print(f"\n❌ Missing secrets: {', '.join(missing_vars)}")
+        print(f"\n Missing secrets: {', '.join(missing_vars)}")
         print("Please add these in GitHub Settings → Secrets and variables → Actions")
         return 1
     
@@ -392,22 +392,22 @@ def main():
         
         # Pick random sign
         sign = random.choice(bot.zodiac_signs)
-        print(f"\n🎯 Selected sign: {sign['romanized']} ({sign['english']})")
+        print(f"\n Selected sign: {sign['romanized']} ({sign['english']})")
         
         # Generate rashifal
         print("🔄 Generating rashifal...")
         rashifal = bot.generate_rashifal(sign)
-        print(f"✨ Generated: {rashifal}")
+        print(f" Generated: {rashifal}")
         
         # Post to Twitter
-        print("\n📤 Posting to Twitter...")
+        print("\n Posting to Twitter...")
         success = bot.post_tweet(rashifal, sign)
         
         if success:
             print("bhayo man!")
             return 0
         else:
-            print("\n⚠️ check gara ta")
+            print("\n check gara ta")
             return 1
             
     except Exception as e:
