@@ -24,18 +24,18 @@ class RashifalBot:
         
         # Zodiac signs with romanization
         self.zodiac_signs = [
-            {"nepali": "मेष", "romanized": "Meṣa", "english": "Aries", "emoji": "♈"},
-            {"nepali": "वृषभ", "romanized": "Vṛṣabha", "english": "Taurus", "emoji": "♉"},
-            {"nepali": "मिथुन", "romanized": "Mithuna", "english": "Gemini", "emoji": "♊"},
-            {"nepali": "कर्कट", "romanized": "Karkaṭa", "english": "Cancer", "emoji": "♋"},
-            {"nepali": "सिंह", "romanized": "Siṃha", "english": "Leo", "emoji": "♌"},
-            {"nepali": "कन्या", "romanized": "Kanyā", "english": "Virgo", "emoji": "♍"},
-            {"nepali": "तुला", "romanized": "Tulā", "english": "Libra", "emoji": "♎"},
-            {"nepali": "वृश्चिक", "romanized": "Vṛśchika", "english": "Scorpio", "emoji": "♏"},
-            {"nepali": "धनु", "romanized": "Dhanu", "english": "Sagittarius", "emoji": "♐"},
-            {"nepali": "मकर", "romanized": "Makara", "english": "Capricorn", "emoji": "♑"},
-            {"nepali": "कुम्भ", "romanized": "Kumbha", "english": "Aquarius", "emoji": "♒"},
-            {"nepali": "मीन", "romanized": "Mīna", "english": "Pisces", "emoji": "♓"}
+            {"nepali": "मेष", "romanized": "Meṣa", "english": "Aries"},
+            {"nepali": "वृषभ", "romanized": "Vṛṣabha", "english": "Taurus"},
+            {"nepali": "मिथुन", "romanized": "Mithuna", "english": "Gemini"},
+            {"nepali": "कर्कट", "romanized": "Karkaṭa", "english": "Cancer"},
+            {"nepali": "सिंह", "romanized": "Siṃha", "english": "Leo"},
+            {"nepali": "कन्या", "romanized": "Kanyā", "english": "Virgo"},
+            {"nepali": "तुला", "romanized": "Tulā", "english": "Libra"},
+            {"nepali": "वृश्चिक", "romanized": "Vṛśchika", "english": "Scorpio"},
+            {"nepali": "धनु", "romanized": "Dhanu", "english": "Sagittarius"},
+            {"nepali": "मकर", "romanized": "Makara", "english": "Capricorn"},
+            {"nepali": "कुम्भ", "romanized": "Kumbha", "english": "Aquarius"},
+            {"nepali": "मीन", "romanized": "Mīna", "english": "Pisces"}
         ]
         
         # Sign personality traits (updated with more nuance)
@@ -69,10 +69,10 @@ class RashifalBot:
             
             try:
                 me = self.twitter_client.get_me()
-                print(f"dunn Twitter API v2 connected as @{me.data.username}")
+                print(f"Twitter API v2 connected as @{me.data.username}")
                 return
             except:
-                print("Twitter API v2 failed,trying v1.1...")
+                print("Twitter API v2 failed, trying v1.1...")
                 
                 # Fallback to API v1.1
                 auth = tweepy.OAuth1UserHandler(
@@ -83,11 +83,11 @@ class RashifalBot:
                 )
                 self.twitter_api_v1 = tweepy.API(auth, wait_on_rate_limit=True)
                 user = self.twitter_api_v1.verify_credentials()
-                print(f"dunn Twitter API v1.1 connected as @{user.screen_name}")
+                print(f"Twitter API v1.1 connected as @{user.screen_name}")
                 self.use_v1_api = True
                 
         except Exception as e:
-            print(f" Twitter setup failed: {e}")
+            print(f"Twitter setup failed: {e}")
             raise
     
     def clean_ai_text(self, text):
@@ -251,7 +251,6 @@ Write for {sign_info['romanized']}:"""
         while retry_count < max_retries:
             try:
                 completion = self.client.chat.completions.create(
-                    model="meta-llama/Llama-3.2-3B-Instruct",
                     messages=[
                         {
                             "role": "system",
@@ -273,8 +272,8 @@ Write for {sign_info['romanized']}:"""
                 retry_count += 1
                 if "rate limit" in str(api_error).lower():
                     if retry_count < max_retries:
-                        print(f" Rate limit hit, attempt {retry_count}/{max_retries}")
-                        print(f"   Waiting 60 seconds before retry...")
+                        print(f"Rate limit hit, attempt {retry_count}/{max_retries}")
+                        print(f"Waiting 60 seconds before retry...")
                         import time
                         time.sleep(60)
                     else:
@@ -305,16 +304,16 @@ Write for {sign_info['romanized']}:"""
                             rashifal_text = rashifal_text.rstrip(',') + '.'
                     
                     if rashifal_text:
-                        print(f" Raw generated: {raw_text}")
-                        print(f" Cleaned: {rashifal_text}")
-                        print(f" Tone: {tone}")
+                        print(f"Raw generated: {raw_text}")
+                        print(f"Cleaned: {rashifal_text}")
+                        print(f"Tone: {tone}")
                         return rashifal_text
             
             # If generation fails completely, raise error
             raise Exception("Failed to generate valid horoscope")
             
         except Exception as e:
-            print(f" Generation error: {e}")
+            print(f"Generation error: {e}")
             raise
     
     def post_tweet(self, rashifal, sign_info):
@@ -341,25 +340,25 @@ Write for {sign_info['romanized']}:"""
                 response = self.twitter_client.create_tweet(text=tweet_text)
                 tweet_id = response.data['id']
             
-            print(f" Tweet posted successfully!")
+            print(f"Tweet posted successfully!")
             print(f"Tweet: {tweet_text}")
-            print(f" Tweet ID: {tweet_id}")
+            print(f"Tweet ID: {tweet_id}")
             print(f"Characters: {len(tweet_text)}/280")
             
             return True
             
         except Exception as e:
-            print(f" Tweet failed: {e}")
+            print(f"Tweet failed: {e}")
             return False
 
 def main():
     """Main function to run the bot"""
-    print(" Starting Rashifal Twitter Bot")
-    print(f" {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print("Starting Rashifal Twitter Bot")
+    print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 50)
     
     # Check environment variables
-    print("\n Checking environment variables...")
+    print("\nChecking environment variables...")
     required_vars = [
         'GROQ_API_KEY',
         'TWITTER_CONSUMER_KEY',
@@ -374,44 +373,44 @@ def main():
         value = os.environ.get(var)
         if not value:
             missing_vars.append(var)
-            print(f" {var}: NOT SET")
+            print(f"ERROR: {var}: NOT SET")
         else:
             # Show first/last 4 chars for verification
             masked = f"{value[:4]}...{value[-4:]}" if len(value) > 8 else "***"
-            print(f"bhayo {var}: {masked}")
+            print(f"OK: {var}: {masked}")
     
     if missing_vars:
-        print(f"\n Missing secrets: {', '.join(missing_vars)}")
-        print("Please add these in GitHub Settings → Secrets and variables → Actions")
+        print(f"\nERROR: Missing secrets: {', '.join(missing_vars)}")
+        print("Please add these in GitHub Settings -> Secrets and variables -> Actions")
         return 1
     
     try:
         # Initialize bot
-        print("\n🤖 Initializing bot...")
+        print("\nInitializing bot...")
         bot = RashifalBot()
         
         # Pick random sign
         sign = random.choice(bot.zodiac_signs)
-        print(f"\n Selected sign: {sign['romanized']} ({sign['english']})")
+        print(f"\nSelected sign: {sign['romanized']} ({sign['english']})")
         
         # Generate rashifal
-        print("🔄 Generating rashifal...")
+        print("Generating rashifal...")
         rashifal = bot.generate_rashifal(sign)
-        print(f" Generated: {rashifal}")
+        print(f"Generated: {rashifal}")
         
         # Post to Twitter
-        print("\n Posting to Twitter...")
+        print("\nPosting to Twitter...")
         success = bot.post_tweet(rashifal, sign)
         
         if success:
-            print("bhayo man!")
+            print("Success!")
             return 0
         else:
-            print("\n check gara ta")
+            print("\nFailed to post")
             return 1
             
     except Exception as e:
-        print(f"\n bhayena: {e}")
+        print(f"\nError: {e}")
         import traceback
         traceback.print_exc()
         return 1
