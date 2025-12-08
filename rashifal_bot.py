@@ -13,7 +13,7 @@ class RashifalBot:
         # Groq API
         self.client = OpenAI(
             base_url="https://api.groq.com/openai/v1",
-            api_key=os.environ.get('GROQ_API_KEY'),
+            api_key=os.environ.get('GROQ_KEY'),
         )
         
         # Twitter credentials
@@ -360,7 +360,7 @@ def main():
     # Check environment variables
     print("\nChecking environment variables...")
     required_vars = [
-        'GROQ_API_KEY',
+        'GROQ_KEY',
         'TWITTER_CONSUMER_KEY',
         'TWITTER_CONSUMER_SECRET',
         'TWITTER_ACCESS_TOKEN',
