@@ -357,37 +357,34 @@ def main():
     print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 50)
     
-    # Check environment variables
-    print("\nChecking environment variables...")
-    required_vars = [
-        'GROQ_KEY',
-        'TWITTER_CONSUMER_KEY',
-        'TWITTER_CONSUMER_SECRET',
-        'TWITTER_ACCESS_TOKEN',
-        'TWITTER_ACCESS_TOKEN_SECRET',
-        'TWITTER_BEARER_TOKEN'
-    ]
-    
-    missing_vars = []
-    for var in required_vars:
-        value = os.environ.get(var)
-        if not value:
-            missing_vars.append(var)
-            print(f"ERROR: {var}: NOT SET")
-        else:
-            # Show first/last 4 chars for verification
-            masked = f"{value[:4]}...{value[-4:]}" if len(value) > 8 else "***"
-            print(f"OK: {var}: {masked}")
-    
-    if missing_vars:
-        print(f"\nERROR: Missing secrets: {', '.join(missing_vars)}")
-        print("Please add these in GitHub Settings -> Secrets and variables -> Actions")
-        return 1
-    
     try:
-        # Initialize bot
+        # Initialize bot (will fail here if GROQ_KEY missing)
         print("\nInitializing bot...")
         bot = RashifalBot()
+        
+        # Check Twitter credentials
+        print("\nChecking Twitter credentials...")
+        twitter_vars = [
+            'TWITTER_CONSUMER_KEY',
+            'TWITTER_CONSUMER_SECRET',
+            'TWITTER_ACCESS_TOKEN',
+            'TWITTER_ACCESS_TOKEN_SECRET',
+            'TWITTER_BEARER_TOKEN'
+        ]
+        
+        missing_vars = []
+        for var in twitter_vars:
+            value = os.environ.get(var)
+            if not value:
+                missing_vars.append(var)
+                print(f"ERROR: {var}: NOT SET")
+            else:
+                masked = f"{value[:4]}...{value[-4:]}" if len(value) > 8 else "***"
+                print(f"OK: {var}: {masked}")
+        
+        if missing_vars:
+            print(f"\nERROR: Missing Twitter secrets: {', '.join(missing_vars)}")
+            return 1
         
         # Pick random sign
         sign = random.choice(bot.zodiac_signs)
