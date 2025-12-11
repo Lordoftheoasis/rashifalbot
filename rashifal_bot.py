@@ -5,7 +5,7 @@ import random
 import tweepy
 import re
 from datetime import datetime
-from openai import OpenAI
+from groq import Groq
 
 class RashifalBot:
     def __init__(self):
@@ -14,17 +14,9 @@ class RashifalBot:
         groq_key = os.environ.get('GROQ_KEY')
         
         if not groq_key:
-            print("ERROR: GROQ_KEY environment variable is not set!")
-            print("Available environment variables:")
-            for key in os.environ.keys():
-                if 'KEY' in key or 'TOKEN' in key or 'SECRET' in key:
-                    print(f"  {key}: {'SET' if os.environ.get(key) else 'NOT SET'}")
-            raise ValueError("GROQ_KEY not found in environment variables")
+            raise ValueError("GROQ_KEY environment variable is not set")
         
-        self.client = OpenAI(
-            base_url="https://api.groq.com/openai/v1",
-            api_key=groq_key,
-        )
+        self.client = Groq(api_key=groq_key)
         
         # Twitter credentials
         self.twitter_client = None
@@ -261,6 +253,7 @@ Write for {sign_info['romanized']}:"""
         while retry_count < max_retries:
             try:
                 completion = self.client.chat.completions.create(
+                    model="llama-3.3-70b-versatile",
                     messages=[
                         {
                             "role": "system",
@@ -280,7 +273,8 @@ Write for {sign_info['romanized']}:"""
                 
             except Exception as api_error:
                 retry_count += 1
-                if "rate limit" in str(api_error).lower():
+                error_str = str(api_error).lower()
+                if any(x in error_str for x in ["rate", "429", "limit", "too many"]):
                     if retry_count < max_retries:
                         print(f"Rate limit hit, attempt {retry_count}/{max_retries}")
                         print(f"Waiting 60 seconds before retry...")
@@ -313,11 +307,13 @@ Write for {sign_info['romanized']}:"""
                         if rashifal_text and not rashifal_text.endswith(('.', '!', '?')):
                             rashifal_text = rashifal_text.rstrip(',') + '.'
                     
-                    if rashifal_text:
-                        print(f"Raw generated: {raw_text}")
-                        print(f"Cleaned: {rashifal_text}")
-                        print(f"Tone: {tone}")
-                        return rashifal_text
+                    if not rashifal_text:
+                        raise Exception("Empty response from Groq")
+                    
+                    print(f"Raw generated: {raw_text}")
+                    print(f"Cleaned: {rashifal_text}")
+                    print(f"Tone: {tone}")
+                    return rashifal_text
             
             # If generation fails completely, raise error
             raise Exception("Failed to generate valid horoscope")
@@ -368,33 +364,9 @@ def main():
     print("=" * 50)
     
     try:
-        # Initialize bot (will fail here if GROQ_KEY missing)
+        # Initialize bot
         print("\nInitializing bot...")
         bot = RashifalBot()
-        
-        # Check Twitter credentials
-        print("\nChecking Twitter credentials...")
-        twitter_vars = [
-            'TWITTER_CONSUMER_KEY',
-            'TWITTER_CONSUMER_SECRET',
-            'TWITTER_ACCESS_TOKEN',
-            'TWITTER_ACCESS_TOKEN_SECRET',
-            'TWITTER_BEARER_TOKEN'
-        ]
-        
-        missing_vars = []
-        for var in twitter_vars:
-            value = os.environ.get(var)
-            if not value:
-                missing_vars.append(var)
-                print(f"ERROR: {var}: NOT SET")
-            else:
-                masked = f"{value[:4]}...{value[-4:]}" if len(value) > 8 else "***"
-                print(f"OK: {var}: {masked}")
-        
-        if missing_vars:
-            print(f"\nERROR: Missing Twitter secrets: {', '.join(missing_vars)}")
-            return 1
         
         # Pick random sign
         sign = random.choice(bot.zodiac_signs)
