@@ -11,9 +11,19 @@ class RashifalBot:
     def __init__(self):
         """Initialize bot with credentials from environment variables"""
         # Groq API
+        groq_key = os.environ.get('GROQ_KEY')
+        
+        if not groq_key:
+            print("ERROR: GROQ_KEY environment variable is not set!")
+            print("Available environment variables:")
+            for key in os.environ.keys():
+                if 'KEY' in key or 'TOKEN' in key or 'SECRET' in key:
+                    print(f"  {key}: {'SET' if os.environ.get(key) else 'NOT SET'}")
+            raise ValueError("GROQ_KEY not found in environment variables")
+        
         self.client = OpenAI(
             base_url="https://api.groq.com/openai/v1",
-            api_key=os.environ.get('GROQ_KEY'),
+            api_key=groq_key,
         )
         
         # Twitter credentials
