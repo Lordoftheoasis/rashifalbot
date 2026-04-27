@@ -35,7 +35,7 @@ NEGATIVE_EXAMPLES = [
     "You can't vibe your way out of consequences.",
     "your karmic debt looks like your bank balance right now.",
     "don't blame Mercury; blame that 2 a.m. call to your ex.",
-    "your aura looks looks like tangled up wired earphones  right now.",
+    "your aura looks like tangled up wired earphones  right now.",
     
 ]
 
