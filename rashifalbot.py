@@ -35,8 +35,7 @@ NEGATIVE_EXAMPLES = [
     "You can't vibe your way out of consequences.",
     "your karmic debt looks like your bank balance right now.",
     "don't blame Mercury; blame that 2 a.m. call to your ex.",
-    "your aura looks like tangled up wired earphones  right now.",
-    
+    "your aura looks like tangled up wired earphones right now.",
 ]
 
 POSITIVE_EXAMPLES = [
@@ -112,7 +111,6 @@ def generate_rashifal(groq_client, model, sign, max_retries=3):
             raw = completion.choices[0].message.content.strip()
             logger.info(f"Groq attempt {attempt} succeeded. Raw: {raw}")
 
-            # Strip meta-commentary wrapper if present
             match = re.match(r'^(A sentence like|Something like|Could be|For example)[^:]*:\s*(.+)', raw, re.IGNORECASE)
             text = clean_text(match.group(2) if match else raw)
 
@@ -178,27 +176,48 @@ def setup_twitter():
     access_token    = get_env('TWITTER_ACCESS_TOKEN')
     access_secret   = get_env('TWITTER_ACCESS_TOKEN_SECRET')
     bearer_token    = os.environ.get('TWITTER_BEARER_TOKEN')
+    client_id       = os.environ.get('TWITTER_CLIENT_ID')
+    client_secret   = os.environ.get('TWITTER_CLIENT_SECRET')
 
-    client = tweepy.Client(
-        bearer_token=bearer_token,
-        consumer_key=consumer_key,
-        consumer_secret=consumer_secret,
-        access_token=access_token,
-        access_token_secret=access_secret,
-        wait_on_rate_limit=True,
-    )
+    # Try v2 with OAuth 2.0 Client ID/Secret first
+    if client_id and client_secret:
+        try:
+            client = tweepy.Client(
+                bearer_token=bearer_token,
+                consumer_key=client_id,
+                consumer_secret=client_secret,
+                access_token=access_token,
+                access_token_secret=access_secret,
+                wait_on_rate_limit=True,
+            )
+            me = client.get_me()
+            logger.info(f"Twitter v2 (OAuth2) connected as @{me.data.username}")
+            return client, None, False
+        except Exception as e:
+            logger.warning(f"Twitter v2 OAuth2 failed: {e}, trying consumer keys...")
 
+    # Fall back to v2 with consumer key/secret
     try:
+        client = tweepy.Client(
+            bearer_token=bearer_token,
+            consumer_key=consumer_key,
+            consumer_secret=consumer_secret,
+            access_token=access_token,
+            access_token_secret=access_secret,
+            wait_on_rate_limit=True,
+        )
         me = client.get_me()
         logger.info(f"Twitter v2 connected as @{me.data.username}")
         return client, None, False
-    except Exception:
-        logger.warning("Twitter v2 failed, falling back to v1.1...")
-        auth = tweepy.OAuth1UserHandler(consumer_key, consumer_secret, access_token, access_secret)
-        api_v1 = tweepy.API(auth, wait_on_rate_limit=True)
-        user = api_v1.verify_credentials()
-        logger.info(f"Twitter v1.1 connected as @{user.screen_name}")
-        return client, api_v1, True
+    except Exception as e:
+        logger.warning(f"Twitter v2 failed: {e}, falling back to v1.1...")
+
+    # Last resort: v1.1
+    auth = tweepy.OAuth1UserHandler(consumer_key, consumer_secret, access_token, access_secret)
+    api_v1 = tweepy.API(auth, wait_on_rate_limit=True)
+    user = api_v1.verify_credentials()
+    logger.info(f"Twitter v1.1 connected as @{user.screen_name}")
+    return client, api_v1, True
 
 
 def main():
