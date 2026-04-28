@@ -2,7 +2,7 @@ name: RashifalBot
 
 on:
   schedule:
-    - cron: "0 * * * *"  # Every hour
+    - cron: "0 0 1 1 *"  # Every hour
   workflow_dispatch:      # Allow manual runs
 
 jobs:
